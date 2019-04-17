@@ -29,7 +29,15 @@ class Clean extends Proto
 
     public static function email(string $value): string
     {
-        return (string) filter_var($value, FILTER_SANITIZE_EMAIL);
+        $value =   trim($value, '@');
+        $pos   = strpos($value, '@');
+        return
+            $pos === false
+                ? ''
+                : (
+                    substr($value, 0, $pos + 1) .
+                    str_replace('@', '', substr($value, $pos + 1))
+                );
     }
 
     public static function float(string $value): float

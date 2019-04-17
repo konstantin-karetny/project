@@ -77,6 +77,49 @@ class Url extends Proto
         $user               = '',
         $vars               = [];
 
+    public static function init(string $url = ''): Url {
+        return new static($url);
+    }
+
+    public function __construct(string $url = '') {
+        die(var_dump($url));
+        $url = $url === '' ? $this->detectCurrent() : $url;
+        if (!static::check($url)) {
+            throw new Exception('Wrong url \'' . $url . '\'', 2);
+        }
+        foreach ($this->parse(static::clean($url)) as $k => $v) {
+            $this->{'set' . ucfirst($k)}($v);
+        }
+        static::$inited = true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static function check(string $url, $options = null): bool {
         if (filter_var($url, FILTER_VALIDATE_URL, $options)) {
             return true;
@@ -116,10 +159,6 @@ class Url extends Proto
         return static::$default_root;
     }
 
-    public static function init(string $url = ''): \Ada\Core\Url {
-        return new static($url);
-    }
-
     public static function isInited(): bool {
         return static::$inited;
     }
@@ -155,17 +194,6 @@ class Url extends Proto
             array_keys(static::SPECIAL_CHARS_CODES),
             urlencode($url)
         );
-    }
-
-    protected function __construct(string $url = '') {
-        $url = $url === '' ? $this->detectCurrent() : $url;
-        if (!static::check($url)) {
-            throw new Exception('Wrong url \'' . $url . '\'', 2);
-        }
-        foreach ($this->parse(static::clean($url)) as $k => $v) {
-            $this->{'set' . ucfirst($k)}($v);
-        }
-        static::$inited = true;
     }
 
     public function dropVar(string $name): bool {

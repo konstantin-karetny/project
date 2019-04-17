@@ -12,7 +12,7 @@ spl_autoload_register();
 
 die(var_dump(
 
-    Check::bool('off')
+                Url::init('https://www.php.net/manual/ru/function.preg-replace.php')
 
 ));
 
