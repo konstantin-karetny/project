@@ -1,0 +1,107 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "6e0bb0e832ced29c5538e834c49618fb",
+    "packages": [
+        {
+            "name": "ada/cms",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "C:/OSPanel/domains/_packagist/ada/cms",
+                "reference": "24a17a4de8658cc5443a702193aeb3331bb6faf3"
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ada\\Cms\\": "/"
+                }
+            },
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Rudenko",
+                    "email": "konstantin.i.rudenko@gmail.com"
+                }
+            ],
+            "description": "Ada CMS",
+            "time": "2018-07-11T07:59:31+00:00"
+        },
+        {
+            "name": "ada/core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "C:/OSPanel/domains/_packagist/ada/core",
+                "reference": "50eb53754c8051a4eee91e508579b44ee77c92d1"
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ada\\Core\\": "/"
+                }
+            },
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Rudenko",
+                    "email": "konstantin.i.rudenko@gmail.com"
+                }
+            ],
+            "description": "Ada Core",
+            "time": "2018-07-11T07:59:52+00:00"
+        },
+        {
+            "name": "ada/units/articles",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "C:/OSPanel/domains/_packagist/ada/units/articles",
+                "reference": "50382128206f02ff07fe35507fb9336f218b7a15"
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ada\\Units\\Articles\\": "/"
+                }
+            },
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Rudenko",
+                    "email": "konstantin.i.rudenko@gmail.com"
+                }
+            ],
+            "description": "Ada Units Articles",
+            "time": "2018-07-11T07:59:08+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0.0"
+    },
+    "platform-dev": []
+}

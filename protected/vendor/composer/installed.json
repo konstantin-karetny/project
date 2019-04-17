@@ -1,0 +1,95 @@
+[
+    {
+        "name": "ada/cms",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "C:/OSPanel/domains/_packagist/ada/cms",
+            "reference": "24a17a4de8658cc5443a702193aeb3331bb6faf3"
+        },
+        "require": {
+            "php": ">=7.0.0"
+        },
+        "time": "2018-07-11T07:59:31+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Ada\\Cms\\": "/"
+            }
+        },
+        "license": [
+            "Apache 2.0"
+        ],
+        "authors": [
+            {
+                "name": "Konstantin Rudenko",
+                "email": "konstantin.i.rudenko@gmail.com"
+            }
+        ],
+        "description": "Ada CMS"
+    },
+    {
+        "name": "ada/core",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "C:/OSPanel/domains/_packagist/ada/core",
+            "reference": "50eb53754c8051a4eee91e508579b44ee77c92d1"
+        },
+        "require": {
+            "php": ">=7.0.0"
+        },
+        "time": "2018-07-11T07:59:52+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Ada\\Core\\": "/"
+            }
+        },
+        "license": [
+            "Apache 2.0"
+        ],
+        "authors": [
+            {
+                "name": "Konstantin Rudenko",
+                "email": "konstantin.i.rudenko@gmail.com"
+            }
+        ],
+        "description": "Ada Core"
+    },
+    {
+        "name": "ada/units/articles",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "C:/OSPanel/domains/_packagist/ada/units/articles",
+            "reference": "50382128206f02ff07fe35507fb9336f218b7a15"
+        },
+        "require": {
+            "php": ">=7.0.0"
+        },
+        "time": "2018-07-11T07:59:08+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Ada\\Units\\Articles\\": "/"
+            }
+        },
+        "license": [
+            "Apache 2.0"
+        ],
+        "authors": [
+            {
+                "name": "Konstantin Rudenko",
+                "email": "konstantin.i.rudenko@gmail.com"
+            }
+        ],
+        "description": "Ada Units Articles"
+    }
+]
