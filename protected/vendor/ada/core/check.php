@@ -2,21 +2,17 @@
 
 namespace Ada\Core;
 
-class Clean extends Proto
+class Check extends Proto
 {
-    protected static
-        $config = [
-            'deafult_filter' => 'cmd'
-        ];
-
-    public static function base64(string $value): string
+    public static function base64(string $value): bool
     {
-        return (string) preg_replace('/[^a-z0-9\/+=]/i', '', $value);
+        return base64_encode(base64_decode($value, true)) === $value;
     }
 
     public static function bool($value): bool
     {
-        return (bool) $value;
+        $res = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        return ($res === true || $res === false) ? true : false;
     }
 
     public static function cmd(string $value): string
@@ -82,18 +78,5 @@ class Clean extends Proto
     public static function url(string $value): string
     {
         return Url::init($value)->out(Url::PARTS);
-    }
-
-    public static function value($value, string $filter = null)
-    {
-        $method = static::cmd(
-            $filter === null
-                ? static::config('deafult_filter')
-                : $filter
-        );
-        if (!method_exists(__CLASS__, $method)) {
-            throw new Exception('Unknown filter \'' . $filter . '\'', 1);
-        }
-        return static::$method($value);
     }
 }
