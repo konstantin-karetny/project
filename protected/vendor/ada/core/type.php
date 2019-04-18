@@ -55,7 +55,7 @@ class Type extends Proto
         return
             (string) key(
                 array_filter(
-                    static::config('names'),
+                    static::$config['names'],
                     function($el) use($alias) {
                         return in_array(Clean::cmd($alias), $el);
                     }

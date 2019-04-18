@@ -4,11 +4,6 @@ namespace Ada\Core;
 
 class Clean extends Proto
 {
-    protected static
-        $config = [
-            'deafult_filter' => 'cmd'
-        ];
-
     public static function base64(string $value): string
     {
         return (string) preg_replace('/[^a-z0-9\/+=]/i', '', $value);
@@ -25,6 +20,11 @@ class Clean extends Proto
             strtolower(
                 preg_replace('/[^a-z0-9_\.-]/i', '', $value)
             );
+    }
+
+    public static function cmds(array $values): array
+    {
+        return array_map([__CLASS__, 'cmd'], $values);
     }
 
     public static function email(string $value): string
@@ -90,18 +90,5 @@ class Clean extends Proto
     public static function url(string $value): string
     {
         return Url::init($value)->out(Url::PARTS);
-    }
-
-    public static function value($value, string $filter = null)
-    {
-        $method = static::cmd(
-            $filter === null
-                ? static::config('deafult_filter')
-                : $filter
-        );
-        if (!method_exists(__CLASS__, $method)) {
-            throw new Exception('Unknown filter \'' . $filter . '\'', 1);
-        }
-        return static::$method($value);
     }
 }

@@ -8,11 +8,6 @@ class Proto
         $cache  = [],
         $config = [];
 
-    public static function config(string $key, $default = null)
-    {
-        return static::getConfig()[$key] ?: $default;
-    }
-
     public static function getConfig(): array
     {
         return static::$config;
@@ -25,6 +20,6 @@ class Proto
 
     public static function setConfig(array $config)
     {
-        static::$config = $config;
+        static::$config = Type::set($config);
     }
 }

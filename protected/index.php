@@ -6,13 +6,15 @@ require_once 'vendor/autoload.php';
 set_include_path(__DIR__ . '/vendor');
 spl_autoload_register();
 
-
-
-
+//DataSet::init(parse_ini_file('C:\OSPanel\domains\sem-tools\components\com_ak\lib\core\config.ini', true))->getCmd('author')
+$var = 'sadf';
+settype($var, 'resource');
+die(var_dump($var));
 
 die(var_dump(
 
-                Url::init('https://www.php.net/manual/ru/function.preg-replace.php')
+Clean::cmds([[]])
+
 
 ));
 
