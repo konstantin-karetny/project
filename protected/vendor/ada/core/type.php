@@ -50,6 +50,21 @@ class Type extends Proto
             ]
         ];
 
+    public static function arr($value): array
+    {
+        return (array) $value;
+    }
+
+    public static function bool($value): bool
+    {
+        return (bool) $value;
+    }
+
+    public static function float($value): float
+    {
+        return (float) $value;
+    }
+
     public static function fullName(string $alias): string
     {
         return
@@ -70,6 +85,44 @@ class Type extends Proto
                 gettype(is_numeric($value) ? $value * 1 : $value)
             );
     }
+
+    public static function int($value): int
+    {
+        return (int) $value;
+    }
+
+    public static function obj($value)
+    {
+        return (object) $value;
+    }
+
+    public static function str($value): string
+    {
+        if (!is_object($value)) {
+            return (string) $value;
+        }
+        if (!method_exists($value, '__toString')) {
+            return '';
+        }
+        $res = $value->__toString();
+        if ($res === $value) {
+            return '';
+        }
+        return static::str($res);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static function set($value, string $type = 'auto', bool $recursively = true)
     {
