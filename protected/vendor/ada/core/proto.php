@@ -8,14 +8,6 @@ class Proto
         $cache  = [],
         $config = [];
 
-    public static function cache(): DataSet
-    {
-        return
-            is_object(static::$cache)
-                ? static::$cache
-                : static::$cache = DataSet::init(Value::array(static::$cache));
-    }
-
     public static function config(): DataSet
     {
         return
@@ -27,5 +19,13 @@ class Proto
     public static function init()
     {
         return new static(...func_get_args());
+    }
+
+    protected static function cache(): DataSet
+    {
+        return
+            is_object(static::$cache)
+                ? static::$cache
+                : static::$cache = DataSet::init(Value::array(static::$cache));
     }
 }

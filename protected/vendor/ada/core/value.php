@@ -67,7 +67,7 @@ class Value extends Proto
 
     public static function email($value): string
     {
-        $value = trim(static::string($value), '@');
+        $value = Str::trim(static::string($value), '@');
         $pos   = strpos($value, '@');
         return
             $pos === false
@@ -119,7 +119,7 @@ class Value extends Proto
 
     public static function html($value): string
     {
-        $value = trim(static::string($value));
+        $value = Str::trim(static::string($value));
         return
             preg_match('//u', $value)
                 ? $value
@@ -150,7 +150,7 @@ class Value extends Proto
     public static function path($value): string
     {
         return
-            trim(
+            Str::trim(
                 strtolower(
                     preg_replace(
                         '/[\/\\\]+/',

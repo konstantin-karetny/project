@@ -4,7 +4,7 @@ namespace Ada\Core;
 
 class Arr extends Proto
 {
-    public static function isset(array $array, string $key)
+    public static function isset(array $array, string $key): bool
     {
         $res = $array;
         foreach (explode('[', str_replace(']', '', $key)) as $k) {

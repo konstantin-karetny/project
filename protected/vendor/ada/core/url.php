@@ -67,17 +67,17 @@ class Url extends Proto
         ];
 
     protected
-        $fragment           = '',
-        $host               = '',
-        $password           = '',
-        $path               = '',
-        $port               = 80,
-        $query              = '',
-        $scheme             = '',
-        $user               = '',
-        $vars               = [];
+        $fragment = '',
+        $host     = '',
+        $password = '',
+        $path     = '',
+        $port     = 80,
+        $query    = '',
+        $scheme   = '',
+        $user     = '',
+        $vars     = [];
 
-    public static function init(string $url = ''): Url
+    public static function init(string $url = '')
     {
         return new static($url);
     }
@@ -85,10 +85,17 @@ class Url extends Proto
     public function __construct(string $url = '')
     {
         $url = $url ? $this->clean($url) : $this->current();
-        foreach ($this->parse(static::clean($url)) as $k => $v) {
+        if ($this->check(!$url)) {
+            return;
+        }
+
+
+        die(var_dump($this->parse($url)));
+
+
+        foreach ($this->parse($url) as $k => $v) {
             $this->{'set' . ucfirst($k)}($v);
         }
-        static::$inited = true;
     }
 
     protected function check(string $url, $options = null): bool
@@ -115,9 +122,9 @@ class Url extends Proto
 
     protected function clean(string $url): string
     {
-        $res = (
+        return
             $this->decode(
-                filter_var(
+                (string) filter_var(
                     str_replace(
                         array_keys(static::config()->getArray('unsafe_chars_codes')),
                         array_values(static::config()->getArray('unsafe_chars_codes')),
@@ -125,15 +132,13 @@ class Url extends Proto
                     ),
                     FILTER_SANITIZE_URL
                 )
-            )
-        );
-        return $this->check($res) ? $res : '';
+            );
     }
 
     protected function current(bool $cached = true): string
     {
-        if (!$cached || static::cache()->get('current')) {
-            $res    = static::init($this->config()->getString('default_root'))->getRoot();
+        if (!$cached || !static::cache()->get('current')) {
+            $res    = $this->clean($this->config()->getString('default_root'));
             $server = Server::init();
             if (!$res) {
                 $res = 'http';
@@ -184,43 +189,47 @@ class Url extends Proto
             );
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static function isInited(): bool {
-        return static::$inited;
-    }
-
-    public static function preset(array $params): bool {
-        if (static::$inited) {
-            return false;
-        }
-        foreach ($params as $k => $v) {
-            switch (Clean::cmd($k)) {
-                case 'default_root':
-                    static::$default_root = static::init($v)->getRoot();
-                    break;
+    protected function parse(string $url): array
+    {
+        $res    = [];
+        $parts  = static::config()->getCmds('parts');
+        $server = Server::init();
+        foreach ((array) parse_url($this->clean($url)) as $k => $v) {
+            if (in_array($k, $parts)) {
+                $res[$k] = $this->clean($v);
             }
         }
-        static::$cache = [];
-        return true;
+        if ($res['host'] !== $this->clean($server->getString('http_host'))) {
+            return $res;
+        }
+        $subdir = File::init(
+            $server->getString(
+                strpos(php_sapi_name(), 'cgi') !== false &&
+                !ini_get('cgi.fix_pathinfo') &&
+                $server->getBool('request_uri')
+                    ? 'php_self'
+                    : 'script_name'
+            )
+        )->getDir()->getPath();
+        if ($subdir && strpos($res['path'] ?? '', $subdir) === 0) {
+            $length       = strlen($subdir);
+            $res['host'] .= '/' . substr($res['path'], 0, $length);
+            $res['path']  = substr($res['path'], $length);
+        }
+        return array_map([__CLASS__, 'clean'], $res);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function dropVar(string $name): bool {
         $name = Clean::cmd($name);
@@ -416,36 +425,6 @@ class Url extends Proto
 
     protected function buildQuery(array $vars): string {
         return http_build_query($vars);
-    }
-
-    protected function parse(string $url): array {
-        $res = [];
-        foreach ((array) parse_url(static::clean($url)) as $k => $v) {
-            if (!in_array($k, static::PARTS)) {
-                continue;
-            }
-            $res[$k] = Types::set(static::clean($v), Types::get($this->$k));
-        }
-        if ($res['host'] !== Inp\Server::getUrl('HTTP_HOST')) {
-            return $res;
-        }
-        $script_path = Fs\File::init(
-            Inp\Server::getPath(
-                (
-                    strpos(php_sapi_name(), 'cgi') !== false &&
-                    Inp\Server::getBool('REQUEST_URI') === ''  &&
-                    !ini_get('cgi.fix_pathinfo')
-                )
-                    ? 'PHP_SELF'
-                    : 'SCRIPT_NAME'
-            )
-        )->getDir()->getPath();
-        if ($script_path && strpos($res['path'] ?? '', $script_path) === 0) {
-            $length       = strlen($script_path);
-            $res['host'] .= '/' . substr($res['path'], 0, $length);
-            $res['path']  = substr($res['path'], $length);
-        }
-        return $res;
     }
 
     protected function parseQuery(string $query): array {

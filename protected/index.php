@@ -28,12 +28,14 @@ $obj->a = 'a';
 $obj->f = '0.25';
 $obj->i = '5';
 
-$resource = fopen('C:\OSPanel\domains\project\protected\index.php', 'r');
+$resource = fopen(__FILE__, 'r');
 
+//http://project/sub/sub/index.php/sub?option=com_ak&controller=urlkeywordranking#frag//
 
 die(var_dump(
 
-Url::init('http://sem-tools.maxx-marketing.de/index.php?option=com_ak&controller=urlkeywordranking'),
+Url::init(),
+Url::init('http://sem-tools.maxx-marketing.de/index.php?option=com_ak&controller=urlkeywordranking#frag//'),
 Url::init('http://сайт.рф')
 
 ));

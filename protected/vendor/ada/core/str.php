@@ -6,7 +6,7 @@ class Str extends Proto
 {
     protected static
         $config = [
-            'trim_chars' => " \t\n\r\0\x0B"
+            'trim_character_mask' => " \t\n\r\0\x0B"
         ];
 
     public static function trim(
@@ -17,7 +17,10 @@ class Str extends Proto
         return
             trim(
                 $string,
-                static::config()->getString('trim_chars') . $character_mask_postfix
+                (
+                    static::config()->getString('trim_character_mask') .
+                    $character_mask_postfix
+                )
             );
     }
 }
