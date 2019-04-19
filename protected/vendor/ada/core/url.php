@@ -77,50 +77,22 @@ class Url extends Proto
         $user               = '',
         $vars               = [];
 
-    public static function init(string $url = ''): Url {
+    public static function init(string $url = ''): Url
+    {
         return new static($url);
     }
 
-    public function __construct(string $url = '') {
-        die(var_dump($url));
-        $url = $url === '' ? $this->detectCurrent() : $url;
-        if (!static::check($url)) {
-            throw new Exception('Wrong url \'' . $url . '\'', 2);
-        }
+    public function __construct(string $url = '')
+    {
+        $url = $url ? $this->clean($url) : $this->current();
         foreach ($this->parse(static::clean($url)) as $k => $v) {
             $this->{'set' . ucfirst($k)}($v);
         }
         static::$inited = true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static function check(string $url, $options = null): bool {
+    protected function check(string $url, $options = null): bool
+    {
         if (filter_var($url, FILTER_VALIDATE_URL, $options)) {
             return true;
         }
@@ -128,36 +100,108 @@ class Url extends Proto
         if ($mb_strlen == strlen($url)) {
             return false;
         }
-        $url_ascii = str_repeat(' ', $mb_strlen);
+        $url_ascii = '';
         for ($i = 0; $i < $mb_strlen; $i++) {
-            $char          = mb_substr($url, $i, 1);
-            $url_ascii[$i] = strlen($char) != mb_strlen($char) ? 'a' : $char;
+            $char       = mb_substr($url, $i, 1);
+            $url_ascii .= strlen($char) != mb_strlen($char) ? 'a' : $char;
         }
-        return (bool) filter_var($url_ascii, FILTER_VALIDATE_URL, $options);
+        return
+            (bool) filter_var(
+                $url_ascii,
+                FILTER_VALIDATE_URL,
+                $options
+            );
     }
 
-    public static function clean(string $url): string {
-        $res = filter_var(
-            str_replace(
-                array_keys(static::UNSAFE_CHARS_CODES),
-                array_values(static::UNSAFE_CHARS_CODES),
-                static::encode(
-                    strtolower(
-                        trim($url, Type\Str::TRIM_CHARS . '/')
-                    )
+    protected function clean(string $url): string
+    {
+        $res = (
+            $this->decode(
+                filter_var(
+                    str_replace(
+                        array_keys(static::config()->getArray('unsafe_chars_codes')),
+                        array_values(static::config()->getArray('unsafe_chars_codes')),
+                        $this->encode(strtolower(Str::trim($url, '/')))
+                    ),
+                    FILTER_SANITIZE_URL
                 )
-            ),
-            FILTER_SANITIZE_URL
+            )
         );
-        if ($res === false) {
-            throw new Exception('Failed to clean url \'' . $url . '\'', 1);
-        }
-        return static::decode($res);
+        return $this->check($res) ? $res : '';
     }
 
-    public static function getDefaultRoot(): string {
-        return static::$default_root;
+    protected function current(bool $cached = true): string
+    {
+        if (!$cached || static::cache()->get('current')) {
+            $res    = static::init($this->config()->getString('default_root'))->getRoot();
+            $server = Server::init();
+            if (!$res) {
+                $res = 'http';
+                if (
+                    ($server->getCmd('https')                  ?: 'off')  !== 'off' ||
+                    ($server->getCmd('http_x_forwarded_proto') ?: 'http') !== 'http'
+                ) {
+                    $res .= 's';
+                }
+                $res .= '://' . $server->getString('http_host');
+            }
+            if (
+                $server->getBool('php_self') &&
+                $server->getBool('request_uri')
+            ) {
+                $res .= '/' . $server->getString('request_uri');
+            }
+            else {
+                $res .= $server->getString('script_name');
+                if ($server->getString('query_string')) {
+                    $res .= '?' . $server->getString('query_string');
+                }
+            }
+            static::cache()->set('current', $this->clean($res));
+        }
+        return static::cache()->get('current');
     }
+
+    protected function decode(string $url): string
+    {
+        return
+            urldecode(
+                str_replace(
+                    array_keys(static::config()->getArray('special_chars_codes')),
+                    array_values(static::config()->getArray('special_chars_codes')),
+                    $url
+                )
+            );
+    }
+
+    protected function encode(string $url): string
+    {
+        return
+            str_replace(
+                array_values(static::config()->getArray('special_chars_codes')),
+                array_keys(static::config()->getArray('special_chars_codes')),
+                urlencode($url)
+            );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static function isInited(): bool {
         return static::$inited;
@@ -176,24 +220,6 @@ class Url extends Proto
         }
         static::$cache = [];
         return true;
-    }
-
-    protected static function decode(string $url): string {
-        return urldecode(
-            str_replace(
-                array_keys(static::SPECIAL_CHARS_CODES),
-                array_values(static::SPECIAL_CHARS_CODES),
-                $url
-            )
-        );
-    }
-
-    protected static function encode(string $url): string {
-        return str_replace(
-            array_values(static::SPECIAL_CHARS_CODES),
-            array_keys(static::SPECIAL_CHARS_CODES),
-            urlencode($url)
-        );
     }
 
     public function dropVar(string $name): bool {
@@ -390,40 +416,6 @@ class Url extends Proto
 
     protected function buildQuery(array $vars): string {
         return http_build_query($vars);
-    }
-
-    protected function detectCurrent(bool $cached = true): string {
-        if ($cached && isset(static::$cache['current'])) {
-            return static::$cache['current'];
-        }
-        $res = static::getDefaultRoot();
-        if (!$res) {
-            $res = 'http';
-            if (
-                strtolower(trim(
-                    Inp\Server::getStr('HTTPS', 'off')
-                )) !== 'off' ||
-                strtolower(trim(
-                    Inp\Server::getStr('HTTP_X_FORWARDED_PROTO', 'http')
-                )) !== 'http'
-            ) {
-                $res .= 's';
-            }
-            $res .= '://' . Inp\Server::getUrl('HTTP_HOST');
-        }
-        if (
-            Inp\Server::getBool('PHP_SELF') &&
-            Inp\Server::getBool('REQUEST_URI')
-        ) {
-            $res .= '/' . Inp\Server::getUrl('REQUEST_URI');
-        }
-        else {
-            $res .= Inp\Server::getUrl('SCRIPT_NAME');
-            if (Inp\Server::getBool('QUERY_STRING')) {
-                $res .= '?' . Inp\Server::getUrl('QUERY_STRING');
-            }
-        }
-        return static::$cache['current'] = static::clean($res);
     }
 
     protected function parse(string $url): array {

@@ -9,21 +9,32 @@ spl_autoload_register();
 //DataSet::init(parse_ini_file('C:\OSPanel\domains\sem-tools\components\com_ak\lib\core\config.ini', true))->getCmd('author')
 
 $arr = [
-    'a' => 'a',
-    'f' => 0.25,
+    'a' => 'aQ)(*&$LKDAS',
+    'f' => '0.25',
     'i' => 5
 ];
-
+[
+                'array',
+                'bool',
+                'float',
+                'int',
+                'null',
+                'object',
+                'resource',
+                'string'
+            ];
 $obj = Proto::init();
 $obj->a = 'a';
-$obj->f = 0.25;
-$obj->i = 5;
+$obj->f = '0.25';
+$obj->i = '5';
 
-$resourse = fopen('C:\OSPanel\domains\project\trunk\protected\index.php', 'r');
+$resource = fopen('C:\OSPanel\domains\project\protected\index.php', 'r');
+
 
 die(var_dump(
 
-    Type::str($resourse)
+Url::init('http://sem-tools.maxx-marketing.de/index.php?option=com_ak&controller=urlkeywordranking'),
+Url::init('http://сайт.рф')
 
 ));
 
