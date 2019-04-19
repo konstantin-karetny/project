@@ -17,6 +17,11 @@ class DataSet extends Proto
         $this->sets($data);
     }
 
+    public function __toString(): string
+    {
+        return json_encode($this->getData());
+    }
+
     public function get(string $key)
     {
         return Arr::value($this->getData(), $key);

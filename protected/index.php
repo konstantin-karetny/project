@@ -23,7 +23,7 @@ $arr = [
                 'resource',
                 'string'
             ];
-$obj = Proto::init();
+$obj = new Proto();
 $obj->a = 'a';
 $obj->f = '0.25';
 $obj->i = '5';

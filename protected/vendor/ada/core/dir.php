@@ -7,12 +7,12 @@ class Dir extends Proto
     protected
         $path = '';
 
-    public static function init(string $path = '')
+    public static function init(string $path)
     {
         return new static($path);
     }
 
-    public function __construct(string $path = '')
+    public function __construct(string $path)
     {
         $this->path = Value::path($path);
     }

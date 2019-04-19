@@ -7,12 +7,12 @@ class File extends Proto
     protected
         $path = '';
 
-    public static function init(string $path = '')
+    public static function init(string $path)
     {
         return new static($path);
     }
 
-    public function __construct(string $path = '')
+    public function __construct(string $path)
     {
         $this->path = Value::path($path);
     }
@@ -155,19 +155,12 @@ class File extends Proto
 
     public function write(
         string $contents,
-        int    $flags   = null,
+        int    $flags   = FILE_APPEND,
                $context = null
     ): bool
     {
-        if (!$this->getDir()->create()) {
-            return false;
-        }
         return
-            @file_put_contents(
-                $this,
-                $contents,
-                $flags === null ? FILE_APPEND : $flags,
-                $context
-            ) !== false;
+            $this->getDir()->create() &&
+            @file_put_contents($this, $contents, $flags, $context) !== false;
     }
 }

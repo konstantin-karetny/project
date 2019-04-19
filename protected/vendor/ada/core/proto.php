@@ -16,16 +16,16 @@ class Proto
                 : static::$config = DataSet::init(Value::array(static::$config));
     }
 
-    public static function init()
-    {
-        return new static(...func_get_args());
-    }
-
     protected static function cache(): DataSet
     {
         return
             is_object(static::$cache)
                 ? static::$cache
                 : static::$cache = DataSet::init(Value::array(static::$cache));
+    }
+
+    public function __toString(): string
+    {
+        return serialize($this);
     }
 }

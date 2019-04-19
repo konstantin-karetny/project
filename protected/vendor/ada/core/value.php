@@ -171,7 +171,7 @@ class Value extends Proto
     {
         return
             is_object($value) && !method_exists($value, '__toString')
-                ? 'Object ' . get_class($value)
+                ? serialize($value)
                 : (string) $value;
     }
 
