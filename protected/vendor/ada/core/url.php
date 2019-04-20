@@ -85,7 +85,7 @@ class Url extends Proto
     public function __construct(string $url = '')
     {
         $url = $url ? $this->clean($url) : $this->current();
-        if ($this->check(!$url)) {
+        if (!$this->check($url)) {
             return;
         }
 
@@ -202,7 +202,7 @@ class Url extends Proto
         if ($res['host'] !== $this->clean($server->getString('http_host'))) {
             return $res;
         }
-        $subdir = File::init(
+        $subdir = (string) File::init(
             $server->getString(
                 strpos(php_sapi_name(), 'cgi') !== false &&
                 !ini_get('cgi.fix_pathinfo') &&
@@ -210,13 +210,13 @@ class Url extends Proto
                     ? 'php_self'
                     : 'script_name'
             )
-        )->getDir()->getPath();
-        if ($subdir && strpos($res['path'] ?? '', $subdir) === 0) {
+        )->getDir();
+        if ($subdir && strpos($res['path'], $subdir) === 0) {
             $length       = strlen($subdir);
             $res['host'] .= '/' . substr($res['path'], 0, $length);
             $res['path']  = substr($res['path'], $length);
         }
-        return array_map([__CLASS__, 'clean'], $res);
+        return array_map([$this, 'clean'], $res);
     }
 
 

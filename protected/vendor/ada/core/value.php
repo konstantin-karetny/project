@@ -232,13 +232,6 @@ class Value extends Proto
 
     protected static function multi(string $method, $values): array
     {
-        return
-            array_map(
-                [
-                    __CLASS__,
-                    $method
-                ],
-                static::array($values)
-            );
+        return array_map([__CLASS__, $method], static::array($values));
     }
 }

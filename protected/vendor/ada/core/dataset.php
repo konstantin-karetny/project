@@ -19,12 +19,12 @@ class DataSet extends Proto
 
     public function __toString(): string
     {
-        return json_encode($this->getData());
+        return json_encode($this->out());
     }
 
     public function get(string $key)
     {
-        return Arr::value($this->getData(), $key);
+        return Arr::value($this->out(), $key);
     }
 
     public function getArray(string $key): array
@@ -60,11 +60,6 @@ class DataSet extends Proto
     public function getCmds(string $key): array
     {
         return Value::cmds($this->get($key));
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
     }
 
     public function getEmail(string $key): string
@@ -159,7 +154,12 @@ class DataSet extends Proto
 
     public function isset(string $key): bool
     {
-        return Arr::isset($this->getData(), $key);
+        return Arr::isset($this->out(), $key);
+    }
+
+    public function out(): array
+    {
+        return $this->data;
     }
 
     public function set(string $key, $value): void
@@ -170,8 +170,13 @@ class DataSet extends Proto
     public function sets(array $values): void
     {
         $this->data = array_merge(
-            $this->getData(),
+            $this->out(),
             Value::typify($values)
         );
+    }
+
+    public function unset(string $key): void
+    {
+        Arr::unset($this->data, $key);
     }
 }

@@ -120,10 +120,12 @@ class File extends Proto
     public function parseIni(
         bool $process_sections = true,
         int  $scanner_mode     = INI_SCANNER_TYPED
-    ): array
+    ): DataSet
     {
-        $res = @parse_ini_file($this, $process_sections, $scanner_mode);
-        return $res === false ? [] : Value::typify($res);
+        return
+            DataSet::init(
+                @parse_ini_file($this, $process_sections, $scanner_mode) ?: []
+            );
     }
 
     public function read(

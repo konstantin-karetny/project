@@ -30,6 +30,11 @@ $obj->i = '5';
 
 $resource = fopen(__FILE__, 'r');
 
+
+$set = File::init('C:\OSPanel\domains\sem-tools\components\com_ak\lib\core\config.ini')->parseIni();
+$set->unset('reply[returns][0]');
+
+
 //http://project/sub/sub/index.php/sub?option=com_ak&controller=urlkeywordranking#frag//
 
 die(var_dump(
