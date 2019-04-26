@@ -169,10 +169,9 @@ class DataSet extends Proto
 
     public function sets(array $values): void
     {
-        $this->data = array_merge(
-            $this->out(),
-            Value::typify($values)
-        );
+        foreach (array_merge($this->out(), $values) as $k => $v) {
+            $this->set($k, $v);
+        }
     }
 
     public function unset(string $key): void

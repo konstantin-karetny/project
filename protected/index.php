@@ -39,9 +39,8 @@ $set->unset('reply[returns][0]');
 
 die(var_dump(
 
-Url::init(),
-Url::init('http://sem-tools.maxx-marketing.de/index.php?option=com_ak&controller=urlkeywordranking#frag//'),
-Url::init('http://сайт.рф')
+Url::init('http://username:password@sem-tools.maxx-marketing.de:333/index.php?option=com_ak&controller=urlkeywordranking#frag//')->getRoot(),
+//Url::init('http://сайт.рф')
 
 ));
 

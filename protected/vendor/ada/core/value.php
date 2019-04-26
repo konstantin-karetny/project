@@ -220,9 +220,14 @@ class Value extends Proto
         return static::multi('uint', $values);
     }
 
-    public static function url($value): string
+    public static function url($value, array $parts = null): string
     {
-        return Url::init(static::string($value))->out(Url::PARTS);
+        return Url::init(static::string($value))->out($parts);
+    }
+
+    public static function urlPart($value): string
+    {
+        return Url::clean($value);
     }
 
     public static function urls($values): array
